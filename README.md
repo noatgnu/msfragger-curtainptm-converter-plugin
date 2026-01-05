@@ -21,7 +21,7 @@
 
 ## Description
 
-Convert MSFragger PTM single site output to CurtainPTM upload format. Extracts PTM positions from index columns, maps peptide sequences to proteins, and generates sequence windows around modification sites.
+Convert MSFragger PTM single site output to CurtainPTM upload format. Extracts PTM positions from index columns, maps peptide sequences to proteins, and generates sequence windows around modification sites. Based on: Phung et al. (2024) PNAS 121(7):e2312676121. Repository: https://github.com/noatgnu/curtain-utils
 
 ## Runtime
 
@@ -102,7 +102,7 @@ Size of the sequence window around modification sites (must be odd number). Defa
 
 Dependencies are defined in: `requirements.txt`
 
-- `curtainutils>=0.2.0`
+- `curtainutils>=0.1.24`
 - `pandas>=2.0.0`
 - `click>=8.0.0`
 
