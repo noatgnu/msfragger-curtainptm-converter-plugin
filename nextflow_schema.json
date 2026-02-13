@@ -1,0 +1,81 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MSFragger to CurtainPTM Converter pipeline parameters",
+    "description": "Convert MSFragger PTM single site output to CurtainPTM upload format. Extracts PTM positions from index columns, maps peptide sequences to proteins, and generates sequence windows around modification sites. Based on: Phung et al. (2024) PNAS 121(7):e2312676121. Repository: https://github.com/noatgnu/curtain-utils",
+    "type": "object",
+    "definitions": {
+        "plugin_parameters": {
+            "title": "Plugin parameters",
+            "description": "Parameters for the MSFragger to CurtainPTM Converter plugin.",
+            "type": "object",
+            "properties": {
+                "fasta_file": {
+                    "type": "string",
+                    "description": "Protein sequence FASTA file. If not provided, sequences will be fetched from UniProt automatically.",
+                    "format": "file-path"
+                },
+                "get_position_from_peptide": {
+                    "type": "boolean",
+                    "description": "Enable this to extract PTM position from lowercase residues in the peptide sequence instead of the index column",
+                    "default": false
+                },
+                "index_col": {
+                    "type": "string",
+                    "description": "Column name containing site information with accession ID and PTM position (e.g., P12345_S123)",
+                    "default": "Index"
+                },
+                "input_file": {
+                    "type": "string",
+                    "description": "MSFragger PTM output file containing differential analysis with site information in the Index column",
+                    "format": "file-path"
+                },
+                "output_filename": {
+                    "type": "string",
+                    "description": "Name of the output file (will be created in the output folder)",
+                    "default": "curtainptm_input.txt"
+                },
+                "peptide_col": {
+                    "type": "string",
+                    "description": "Column name containing peptide sequences",
+                    "default": "Peptide"
+                },
+                "sequence_window_size": {
+                    "type": "number",
+                    "description": "Size of the sequence window around modification sites (must be odd number). Default is 21 (10 residues before + modification + 10 after).",
+                    "default": 21
+                },
+                "uniprot_columns": {
+                    "type": "string",
+                    "description": "Comma-separated list of UniProt columns to retrieve when fetching sequences online",
+                    "default": "accession,id,sequence,protein_name"
+                }
+            }
+        }
+    },
+    "properties": {
+        "fasta_file": {
+            "$ref": "#/definitions/plugin_parameters/properties/fasta_file"
+        },
+        "get_position_from_peptide": {
+            "$ref": "#/definitions/plugin_parameters/properties/get_position_from_peptide"
+        },
+        "index_col": {
+            "$ref": "#/definitions/plugin_parameters/properties/index_col"
+        },
+        "input_file": {
+            "$ref": "#/definitions/plugin_parameters/properties/input_file"
+        },
+        "output_filename": {
+            "$ref": "#/definitions/plugin_parameters/properties/output_filename"
+        },
+        "peptide_col": {
+            "$ref": "#/definitions/plugin_parameters/properties/peptide_col"
+        },
+        "sequence_window_size": {
+            "$ref": "#/definitions/plugin_parameters/properties/sequence_window_size"
+        },
+        "uniprot_columns": {
+            "$ref": "#/definitions/plugin_parameters/properties/uniprot_columns"
+        }
+    }
+}
