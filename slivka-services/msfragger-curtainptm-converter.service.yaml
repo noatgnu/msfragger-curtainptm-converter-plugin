@@ -1,0 +1,82 @@
+# Slivka service configuration for msfragger-curtainptm-converter
+# Generated from Cauldron plugin format
+#
+# For file inputs that reference large databases (e.g., FASTA databases),
+# consider configuring them as environment variables pointing to shared storage:
+#   env:
+#     DATABASE_PATH: "${SLIVKA_HOME}/databases/uniref90.fasta"
+# Then reference in args as: arg: "--db=${DATABASE_PATH}"
+
+slivka-version: "0.8"
+name: msfragger-curtainptm-converter
+description: Convert MSFragger PTM single site output to CurtainPTM upload format. Extracts PTM positions from index columns, maps peptide sequences to proteins, and generates sequence windows around modification sites. Based on: Phung et al. (2024) PNAS 121(7):e2312676121. Repository: https://github.com/noatgnu/curtain-utils
+author: CauldronGO Team
+version: "1.0.0"
+license: MIT
+classifiers:
+  - "Topic :: Scientific/Engineering :: Bio-Informatics"
+
+parameters:
+  input_file:
+    name: "MSFragger Output File"
+    description: "MSFragger PTM output file containing differential analysis with site information in the Index column"
+    type: file
+    required: true
+    media-type: text/tab-separated-values
+  index_col:
+    name: "Index Column Name"
+    description: "Column name containing site information with accession ID and PTM position (e.g., P12345_S123)"
+    type: text
+    required: true
+    default: Index
+  peptide_col:
+    name: "Peptide Column Name"
+    description: "Column name containing peptide sequences"
+    type: text
+    required: true
+    default: Peptide
+  fasta_file:
+    name: "FASTA File (Optional)"
+    description: "Protein sequence FASTA file. If not provided, sequences will be fetched from UniProt automatically."
+    type: file
+    media-type: application/fasta
+  get_position_from_peptide:
+    name: "Parse Position from Peptide Column"
+    description: "Enable this to extract PTM position from lowercase residues in the peptide sequence instead of the index column"
+    type: boolean
+    default: false
+  uniprot_columns:
+    name: "UniProt Data Columns"
+    description: "Comma-separated list of UniProt columns to retrieve when fetching sequences online"
+    type: text
+    default: accession,id,sequence,protein_name
+  output_filename:
+    name: "Output Filename"
+    description: "Name of the output file (will be created in the output folder)"
+    type: text
+    default: curtainptm_input.txt
+  sequence_window_size:
+    name: "Sequence Window Size"
+    description: "Size of the sequence window around modification sites (must be odd number). Default is 21 (10 residues before + modification + 10 after)."
+    type: float
+    default: 21
+    min: 1
+    max: 101
+
+command:
+  - python
+  - convert.py
+
+args:
+  _output_dir:
+    arg: "--output_folder=."
+
+outputs:
+  converted_file:
+    path: "*.txt"
+    media-type: text/tab-separated-values
+
+execution:
+  runners:
+    default:
+      type: SlivkaQueueRunner
